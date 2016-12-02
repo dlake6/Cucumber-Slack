@@ -1,0 +1,5 @@
+#dom_invalid: -t @domain,@invalid
+#dom_valid: -t @domain,@valid
+
+user_valid: -t @user,@valid
+user_invalid: -t @user,@invalid
