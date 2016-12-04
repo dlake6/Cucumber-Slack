@@ -1,5 +1,5 @@
 Given(/^I am signed in to my teams page$/) do
-  if App.user_status.logged_in? == false
+  if App.team_page.logged_in? == false
     App.login_page.visit
     App.login_page.login_with :valid
   end 

@@ -1,84 +1,58 @@
 class UserStatus < Generic
 
   def active
+    @browser.i(id: "presence").wait_until_present(10)
     @browser.i(id: "presence").click
-    @browser.div(class: "menu_body").wait_until_present(15)
+    @browser.div(class: "menu_body").wait_until_present(10)
     @browser.li(id: "member_presence").click
     check_active
   end
 
   def check_active
-    @browser.i(id: "presence").wait_until_present(15)
-    raise if @browser.i(class: "active").exists? == false
+    @browser.i(id: "presence").wait_until_present(10)
+    @browser.i(class: "active").wait_until_present(10)
   end
 
   def mute
-    @browser.button(class: "notifications_menu_btn").wait_until_present
+    @browser.button(class: "notifications_menu_btn").wait_until_present(10)
     @browser.button(class: "notifications_menu_btn").click
-    @browser.div(id: "menu_items_scroller").wait_until_present
+    @browser.div(id: "menu_items_scroller").wait_until_present(10)
     @browser.ul(id: "menu_items").lis[0].click
   end
 
   def check_mute
-    @browser.i(class: "active dnd").wait_until_present(15)
+    @browser.i(class: "active dnd").wait_until_present(10)
     unmute
   end
 
   def unmute
-    menu_wait
     @browser.button(class: "notifications_menu_btn").click
     @browser.div(class: "menu_content").wait_until_present
     @browser.ul(id: "menu_items").lis[0].a.click
+    menu_wait
     check_unmute
   end
 
   def check_unmute
-    #sleep 1
-    menu_wait
-    if @browser.i(class: "active dnd").exist? == true
-      raise "notifications are still muted"
-    end
+    Watir::Wait.until { @browser.i(class: "active dnd").exists? == false }
   end
 
   def away
-    @browser.i(id: "presence").wait_until_present
+    @browser.i(id: "presence").wait_until_present(10)
     @browser.i(id: "presence").click
-    @browser.div(class: "menu_body").wait_until_present
+    @browser.div(class: "menu_body").wait_until_present(10)
     @browser.li(id: "member_presence").click
   end
 
   def check_away
     menu_wait
-    @browser.i(class: "away").wait_until_present(15)
+    @browser.i(class: "away").wait_until_present(10)
     active
   end
 
   def menu_wait
     Watir::Wait.until { @browser.div(class: "menu_body").exists? == false }
     Watir::Wait.until { @browser.div(class: "menu_items_scroller").exists? == false }
-  end
-
-  def logout
-    @browser.i(id: "presence").wait_until_present
-    @browser.i(id: "presence").click
-    @browser.div(class: "menu_body").wait_until_present
-    @browser.li(id: "logout").click
-    confirm_logout
-  end
-
-  def confirm_logout
-    sleep 2
-    unless @browser.h1.text == "You've signed out of Slack"
-      raise "logout was not achieved"
-    end
-  end
-
-  def logged_in? 
-    if @browser.url.include? "spartaglobal.slack.com/messages"
-      return true
-    else
-      return false
-    end
   end
 
 end
