@@ -1,15 +1,15 @@
-class Status < Generic
+class UserStatus < Generic
 
   def active
     @browser.i(id: "presence").click
-    @browser.div(class: "menu_body").wait_until_present
+    @browser.div(class: "menu_body").wait_until_present(15)
     @browser.li(id: "member_presence").click
     check_active
   end
 
   def check_active
-    @browser.i(id: "presence").wait_until_present
-    @browser.i(class: "active").wait_until_present
+    @browser.i(id: "presence").wait_until_present(15)
+    raise if @browser.i(class: "active").exists? == false
   end
 
   def mute
@@ -20,11 +20,12 @@ class Status < Generic
   end
 
   def check_mute
-    @browser.i(class: "active dnd").wait_until_present
+    @browser.i(class: "active dnd").wait_until_present(15)
     unmute
   end
 
   def unmute
+    menu_wait
     @browser.button(class: "notifications_menu_btn").click
     @browser.div(class: "menu_content").wait_until_present
     @browser.ul(id: "menu_items").lis[0].a.click
@@ -32,6 +33,7 @@ class Status < Generic
   end
 
   def check_unmute
+    #sleep 1
     menu_wait
     if @browser.i(class: "active dnd").exist? == true
       raise "notifications are still muted"
@@ -47,12 +49,13 @@ class Status < Generic
 
   def check_away
     menu_wait
-    @browser.i(class: "away").wait_until_present
+    @browser.i(class: "away").wait_until_present(15)
     active
   end
 
   def menu_wait
     Watir::Wait.until { @browser.div(class: "menu_body").exists? == false }
+    Watir::Wait.until { @browser.div(class: "menu_items_scroller").exists? == false }
   end
 
   def logout
@@ -77,4 +80,6 @@ class Status < Generic
       return false
     end
   end
+
 end
+

@@ -1,7 +1,7 @@
 class Generic
 
-  def intialize
-    @browser = Watir::Browser.new :chrome
+  def initialize(browser)
+    @browser = browser
   end
 
 end

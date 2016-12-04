@@ -6,18 +6,16 @@ class LoginPage < Generic
   end
 
   def confirm_domain_page
-    if @browser.text_field(id: "domain").exists? == false 
-        raise "element not found"
-    end
+   raise if @browser.text_field(id: "domain").exists? == false
   end
 
   def domain_with(validity)
     if validity == :valid
-        @browser.text_field(id: "domain").send_keys "spartaglobal\n"
+      @browser.text_field(id: "domain").send_keys "spartaglobal\n"
     elsif validity == :invalid
-        @browser.text_field(id: "domain").send_keys "attempt\n"
+      @browser.text_field(id: "domain").send_keys "Fanart\n"
     else
-        raise "wrong argument given"
+      raise "wrong argument given"
     end
   end
 
@@ -27,9 +25,7 @@ class LoginPage < Generic
   end
 
   def confirm_page
-    unless @browser.text_field(id: "email").exists? == true 
-      raise "element not found"
-    end
+    raise if @browser.text_field(id: "email").exists? == false 
   end
 
     def login_with(validity)
@@ -45,15 +41,11 @@ class LoginPage < Generic
     end
 
     def confirm_login
-      if @browser.h2(id: "channels_header").exist? == false
-        raise "element not found"
-      end
+      raise if @browser.h2(id: "channels_header").exist? == false
     end
 
     def confirm_error
-      if @browser.p(class: "alert").exists? == false
-          raise "No error message appeared"
-      end
+      raise if @browser.p(class: "alert").exists? == false
     end
 
 end
